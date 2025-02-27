@@ -1,0 +1,26 @@
+test:
+  name: ChannelB Vehicle Status Test
+  description: Test for vehicle status on ChannelB smart contract
+
+  workers:
+    number: 5 # 并发线程数
+
+  rounds:
+    - label: CreateVehicleStatus
+      txNumber: 100 # 总交易数量
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5 # 每秒发送交易数
+      workload:
+        module: workload/insurancePolicyWorkload.js # 指向工作负载文件的位置
+    - label: QueryVehicleStatus
+      txNumber: 100
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+      workload:
+        module: workload/queryInsurancePolicy.js
+        arguments:
+          assets: 100

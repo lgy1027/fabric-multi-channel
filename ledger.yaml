@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  ledger:
+    build:
+      context: ./server
+      dockerfile: build/Dockerfile
+    ports:
+      - "18050:8050"
+    command: ledger
+    networks:
+      - fabric-network
+    volumes:
+      - ./crypto-config/peerOrganizations:/crypto-config/peerOrganizations
+      - ./server/ledger.yaml:/etc/ledger/ledger.yaml
+    restart: always
+
+networks:
+  fabric-network:
+    external: true

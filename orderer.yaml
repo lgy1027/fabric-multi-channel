@@ -1,0 +1,166 @@
+version: '3.7'
+
+services:
+
+  cli:
+    image: hyperledger/fabric-tools:2.4.1
+    restart: always
+    container_name: fabric-cli
+    hostname: fabric-cli
+    stdin_open: true
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    tty: true
+    networks:
+      - fabric-network
+    environment:
+      - CORE_PEER_ID=fabric-cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # default to operate on peer0.org1
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - FABRIC_LOGGING_SPEC=info
+      - FABRIC_LOGGING_FORMAT=%{color}[%{id:03x} %{time:01-02 15:04:05.00 MST}] [%{module}] %{shortfunc} -> %{level:.4s}%{color:reset} %{message}
+      - CORE_PEER_TLS_ENABLED=true  # to enable TLS, change to true
+      - ORDERER_CA=/etc/hyperledger/fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+    volumes:
+      - ./config/crypto-config.yaml:/etc/hyperledger/fabric/crypto-config.yaml
+      - ./config/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml
+      - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+      - ./channel-artifacts:/tmp/channel-artifacts
+      - ./chaincodes:/etc/hyperledger/fabric/chaincodes
+      - ./create.sh:/opt/gopath/src/github.com/hyperledger/fabric/peer/create.sh
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+
+
+  orderer1.example.com:  # There can be multiple orderers
+    image: hyperledger/fabric-orderer:2.5.7
+    restart: always
+    container_name: orderer1.example.com
+    hostname: orderer1.example.com
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    networks:
+      - fabric-network
+    ports:
+      - "7050:7050"
+    environment:
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/etc/hyperledger/fabric/orderer.genesis.block # by default, all materials should be put under $FABRIC_CFG_PATH, which defaults to /etc/hyperledger/fabric
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP # default: DEFAULT
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/fabric/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      #- ORDERER_GENERAL_LEDGERTYPE=json  # default: file
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443  # operation RESTful API
+      - ORDERER_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from orderer via /metrics RESTful API
+      #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true # default: false
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/fabric/tls/ca.crt]
+      # Only required by raft mode
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/fabric/tls/ca.crt]
+      - FABRIC_LOGGING_SPEC=info
+    volumes:
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/:/etc/hyperledger/fabric/tls
+      - ./channel-artifacts/orderer.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
+    command: orderer start
+
+  orderer2.example.com:
+    image: hyperledger/fabric-orderer:2.5.7
+    restart: always
+    container_name: orderer2.example.com
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    hostname: orderer2.example.com
+    networks:
+      - fabric-network
+    ports:
+      - "8050:7050"
+    environment:
+      - FABRIC_LOGGING_SPEC=info
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/etc/hyperledger/fabric/orderer.genesis.block # by default, all materials should be put under $FABRIC_CFG_PATH, which defaults to /etc/hyperledger/fabric
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP # default: DEFAULT
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/fabric/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      #- ORDERER_GENERAL_LEDGERTYPE=json  # default: file
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443  # operation RESTful API
+      - ORDERER_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from orderer via /metrics RESTful API
+      #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true # default: false
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/fabric/tls/ca.crt]
+      # Only required by raft mode
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/fabric/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_SENDBUFFERSIZE=10
+    volumes:
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/:/etc/hyperledger/fabric/tls
+      - ./channel-artifacts/orderer.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
+    command: orderer start
+
+  orderer3.example.com:
+    image: hyperledger/fabric-orderer:2.5.7
+    restart: always
+    container_name: orderer3.example.com
+    hostname: orderer3.example.com
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    networks:
+      - fabric-network
+    ports:
+      - "9050:7050"
+    environment:
+      - FABRIC_LOGGING_SPEC=info  # default: INFO
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 # default: 127.0.0.1
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file # default: provisional
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/etc/hyperledger/fabric/orderer.genesis.block # by default, all materials should be put under $FABRIC_CFG_PATH, which defaults to /etc/hyperledger/fabric
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP # default: DEFAULT
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/fabric/msp
+      - ORDERER_GENERAL_LEDGERTYPE=file
+      #- ORDERER_GENERAL_LEDGERTYPE=json  # default: file
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443  # operation RESTful API
+      - ORDERER_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from orderer via /metrics RESTful API
+      #- ORDERER_RAMLEDGER_HISTORY_SIZE=100  #only useful when use ram ledger
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true # default: false
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/fabric/tls/ca.crt]
+      # Only required by raft mode
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/fabric/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/fabric/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/etc/hyperledger/fabric/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_SENDBUFFERSIZE=10
+    volumes:
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/:/etc/hyperledger/fabric/tls
+      - ./channel-artifacts/orderer.genesis.block:/etc/hyperledger/fabric/orderer.genesis.block
+
+networks:
+  fabric-network:
+    external: true

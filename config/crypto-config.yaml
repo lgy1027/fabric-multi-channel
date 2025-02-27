@@ -1,0 +1,117 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: example.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer1
+        SANS:
+          - "orderer1.example.com"
+          - "10.0.100.204"         # 示例 IP
+      - Hostname: orderer2
+        SANS:
+          - "orderer2.example.com"
+          - "10.0.100.204"
+      - Hostname: orderer3
+        SANS:
+          - "orderer3.example.com"
+          - "10.0.100.204"
+
+PeerOrgs:
+  - Name: Org1
+    Domain: org1.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org1.example.com"
+        - "10.0.100.204"  # 示例 IP
+    Users:
+      Count: 1
+
+  - Name: Org2
+    Domain: org2.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org2.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1
+
+  - Name: Org3
+    Domain: org3.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org3.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1
+
+  - Name: Org4
+    Domain: org4.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org4.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1
+
+  - Name: Org5
+    Domain: org5.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org5.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1
+
+  - Name: Org6
+    Domain: org6.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org6.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1
+
+  - Name: Org7
+    Domain: org7.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org7.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1
+
+  - Name: Org8
+    Domain: org8.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org8.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1
+
+  - Name: Org9
+    Domain: org9.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "peer0.org9.example.com"
+        - "10.0.100.204"
+    Users:
+      Count: 1

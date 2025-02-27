@@ -1,0 +1,45 @@
+---
+name: test-network-org1
+version: "2.0.0"
+caliper:
+  blockchain: fabric
+channels:
+  - channelName: channela
+    contracts:
+      - id: channela_ledger
+
+organizations:
+  - mspid: Org1MSP
+    # Identities come from cryptogen created material for test-network
+    identities:
+      certificates:
+        - name: 'User1'
+          clientPrivateKey:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem'
+    connectionProfile:
+      path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org1.example.com/connection-org1.yaml'
+      discover: true
+  - mspid: Org4MSP
+    identities:
+      certificates:
+        - name: 'User1'
+          clientPrivateKey:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org4.example.com/users/User1@org4.example.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org4.example.com/users/User1@org4.example.com/msp/signcerts/User1@org4.example.com-cert.pem'
+    connectionProfile:
+      path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org4.example.com/connection-org4.yaml'
+      discover: true
+  - mspid: Org7MSP
+    identities:
+      certificates:
+        - name: 'User1'
+          clientPrivateKey:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org7.example.com/users/User1@org7.example.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org7.example.com/users/User1@org7.example.com/msp/signcerts/User1@org7.example.com-cert.pem'
+    connectionProfile:
+      path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org7.example.com/connection-org7.yaml'
+      discover: true

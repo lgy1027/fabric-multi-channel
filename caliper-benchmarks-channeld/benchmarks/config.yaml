@@ -1,0 +1,34 @@
+test:
+  name: ChannelB Vehicle Status Test
+  description: Test for vehicle status on ChannelB smart contract
+
+  # 增加全局的超时时间设置，防止长时间等待，单位为秒
+  timeout: 300
+
+  workers:
+    number: 5 # 并发线程数
+    # 可以考虑添加worker启动策略，如均匀分布启动，避免瞬间压力过大
+    startStrategy: "uniform"
+
+  rounds:
+    - label: CreateParkingFacility
+      txNumber: 100 # 总交易数量
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5 # 每秒发送交易数
+        # 增加一些容错机制，例如最大重试次数
+        maxRetries: 3
+      workload:
+        module: workload/createParkingFacility.js # 指向工作负载文件的位置
+    - label: QueryParkingFacility
+      txNumber: 100 # 总交易数量
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+        maxRetries: 3
+      workload:
+        module: workload/queryParkingFacility.js
+        arguments:
+          assets: 100

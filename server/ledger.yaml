@@ -1,0 +1,45 @@
+common:
+  listenip: 0.0.0.0
+  listenport: 8050
+ledger:
+    - OrgMsp: Org1MSP
+      contract:
+        - channelName: channela
+          chaincodeName: channela_ledger
+          contractName: ChannelAContract
+        - channelName: channelb
+          chaincodeName: channelb_ledger
+          contractName: ChannelBContract
+      peerEndpoint: peer0.org1.example.com:7051
+      gatewayPeer: peer0.org1.example.com
+      certPath: /crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem
+      keyPath: /crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk
+      tlsCertPath: /crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+    - OrgMsp: Org4MSP
+      contract:
+        - channelName: channela
+          chaincodeName: channela_ledger
+          contractName: ChannelAContract
+        - channelName: channelc
+          chaincodeName: channelc_ledger
+          contractName: ChannelCContract
+      peerEndpoint: peer0.org4.example.com:10051
+      gatewayPeer: peer0.org4.example.com
+      certPath: /crypto-config/peerOrganizations/org4.example.com/users/User1@org4.example.com/msp/signcerts/User1@org4.example.com-cert.pem
+      keyPath: /crypto-config/peerOrganizations/org4.example.com/users/User1@org4.example.com/msp/keystore/priv_sk
+      tlsCertPath: /crypto-config/peerOrganizations/org4.example.com/peers/peer0.org4.example.com/tls/ca.crt
+    - OrgMsp: Org7MSP
+      contract:
+        - channelName: channela
+          chaincodeName: channela_ledger
+          contractName: ChannelAContract
+        - channelName: channeld
+          chaincodeName: channeld_ledger
+          contractName: ChannelDContract
+      peerEndpoint: peer0.org7.example.com:13051
+      gatewayPeer: peer0.org7.example.com
+      certPath: /crypto-config/peerOrganizations/org7.example.com/users/User1@org7.example.com/msp/signcerts/User1@org7.example.com-cert.pem
+      keyPath: /crypto-config/peerOrganizations/org7.example.com/users/User1@org7.example.com/msp/keystore/priv_sk
+      tlsCertPath: /crypto-config/peerOrganizations/org7.example.com/peers/peer0.org7.example.com/tls/ca.crt
+ipfsconfig:
+  url: ipfs:5001

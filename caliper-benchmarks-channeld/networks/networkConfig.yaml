@@ -1,0 +1,44 @@
+---
+name: test-network-org1
+version: "2.0.0"
+caliper:
+  blockchain: fabric
+channels:
+  - channelName: channeld
+    contracts:
+      - id: channeld_ledger
+
+organizations:
+  - mspid: Org7MSP
+    identities:
+      certificates:
+        - name: 'User1'
+          clientPrivateKey:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org7.example.com/users/User1@org7.example.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org7.example.com/users/User1@org7.example.com/msp/signcerts/User1@org7.example.com-cert.pem'
+    connectionProfile:
+      path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org7.example.com/connection-org7.yaml'
+      discover: true
+  - mspid: Org8MSP
+    identities:
+      certificates:
+        - name: 'User1'
+          clientPrivateKey:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org8.example.com/users/User1@org8.example.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org8.example.com/users/User1@org8.example.com/msp/signcerts/User1@org8.example.com-cert.pem'
+    connectionProfile:
+      path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org8.example.com/connection-org8.yaml'
+      discover: true
+  - mspid: Org9MSP
+    identities:
+      certificates:
+        - name: 'User1'
+          clientPrivateKey:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org9.example.com/users/User1@org9.example.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org9.example.com/users/User1@org9.example.com/msp/signcerts/User1@org9.example.com-cert.pem'
+    connectionProfile:
+      path: '/etc/hyperledger/fabric/crypto-config/peerOrganizations/org9.example.com/connection-org9.yaml'
+      discover: true

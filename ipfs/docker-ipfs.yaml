@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  ipfs0:
+    container_name: ipfs0
+    image: ipfs/kubo
+    restart: always
+    ports:
+      - "14001:4001"
+      - "15001:5001"
+      - "18080:8080"
+    networks:
+      - fabric-network
+    volumes:
+      - ./data:/data/ipfs
+      - ./init.sh:/container-init.d/init.sh
+networks:
+  fabric-network:
+    external: true

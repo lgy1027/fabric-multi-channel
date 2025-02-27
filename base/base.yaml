@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  fabricdns:
+    image: busybox
+    volumes:
+      - /etc/localtime:/etc/localtime
+    environment:
+      - COLUMNS=500
+      - GODEBUG=netdns=go
+    extra_hosts:
+      - "orderer1.example.com:10.0.110.110"
+      - "orderer2.example.com:10.0.110.110"
+      - "orderer3.example.com:10.0.110.110"
+      - "peer0.org1.example.com:10.0.110.110"
+      - "peer0.org2.example.com:10.0.110.110"
+      - "peer0.org3.example.com:10.0.110.110"
+      - "peer0.org4.example.com:10.0.110.110"
+      - "peer0.org5.example.com:10.0.110.110"
+      - "peer0.org6.example.com:10.0.110.110"
+      - "peer0.org7.example.com:10.0.110.110"
+      - "peer0.org8.example.com:10.0.110.110"
+      - "peer0.org9.example.com:10.0.110.110"

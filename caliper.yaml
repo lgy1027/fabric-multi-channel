@@ -1,0 +1,79 @@
+version: '3.7'
+
+services:
+
+ caliper-channela:
+   container_name: calipera
+   image: hyperledger/caliper:0.6.0
+   command: launch manager
+   extends:
+     file: base/base.yaml
+     service: fabricdns
+   networks:
+     - fabric-network
+   environment:
+     - CALIPER_BIND_SUT=fabric:fabric-gateway
+     - CALIPER_BENCHCONFIG=benchmarks/config.yaml
+     - CALIPER_NETWORKCONFIG=networks/networkConfig.yaml
+   volumes:
+     - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+     - ./channel-artifacts:/tmp/channel-artifacts
+     - ./caliper-benchmarks-channela:/hyperledger/caliper/workspace
+
+  caliper-channelb:
+    container_name: caliperb
+    image: hyperledger/caliper:0.6.0
+    command: launch manager
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    networks:
+      - fabric-network
+    environment:
+      - CALIPER_BIND_SUT=fabric:fabric-gateway
+      - CALIPER_BENCHCONFIG=benchmarks/config.yaml
+      - CALIPER_NETWORKCONFIG=networks/networkConfig.yaml
+    volumes:
+      - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+      - ./channel-artifacts:/tmp/channel-artifacts
+      - ./caliper-benchmarks-channelb:/hyperledger/caliper/workspace
+
+  caliper-channelc:
+    container_name: caliperc
+    image: hyperledger/caliper:0.6.0
+    command: launch manager
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    networks:
+      - fabric-network
+    environment:
+      - CALIPER_BIND_SUT=fabric:fabric-gateway
+      - CALIPER_BENCHCONFIG=benchmarks/config.yaml
+      - CALIPER_NETWORKCONFIG=networks/networkConfig.yaml
+    volumes:
+      - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+      - ./channel-artifacts:/tmp/channel-artifacts
+      - ./caliper-benchmarks-channelc:/hyperledger/caliper/workspace
+
+  caliper-channeld:
+    container_name: caliperd
+    image: hyperledger/caliper:0.6.0
+    command: launch manager
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    networks:
+      - fabric-network
+    environment:
+      - CALIPER_BIND_SUT=fabric:fabric-gateway
+      - CALIPER_BENCHCONFIG=benchmarks/config.yaml
+      - CALIPER_NETWORKCONFIG=networks/networkConfig.yaml
+    volumes:
+      - ./crypto-config:/etc/hyperledger/fabric/crypto-config
+      - ./channel-artifacts:/tmp/channel-artifacts
+      - ./caliper-benchmarks-channeld:/hyperledger/caliper/workspace
+
+networks:
+  fabric-network:
+    external: true

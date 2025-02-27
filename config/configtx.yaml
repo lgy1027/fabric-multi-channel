@@ -1,0 +1,499 @@
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: ../crypto-config/ordererOrganizations/example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+    OrdererEndpoints:
+      - orderer1.example.com:7050
+      - orderer2.example.com:8050
+      - orderer3.example.com:9050
+
+  - &Org1
+    Name: Org1MSP
+    ID: Org1MSP
+    MSPDir: ../crypto-config/peerOrganizations/org1.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org1MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org1.example.com
+        Port: 7051
+
+  - &Org2
+    Name: Org2MSP
+    ID: Org2MSP
+    MSPDir: ../crypto-config/peerOrganizations/org2.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org2MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org2.example.com
+        Port: 8051
+
+  - &Org3
+    Name: Org3MSP
+    ID: Org3MSP
+    MSPDir: ../crypto-config/peerOrganizations/org3.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org3MSP.admin', 'Org3MSP.peer', 'Org3MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org3MSP.admin', 'Org3MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org3MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org3MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org3.example.com
+        Port: 9051
+
+  - &Org4
+    Name: Org4MSP
+    ID: Org4MSP
+    MSPDir: ../crypto-config/peerOrganizations/org4.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org4MSP.admin', 'Org4MSP.peer', 'Org4MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org4MSP.admin', 'Org4MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org4MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org4MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org4.example.com
+        Port: 10051
+
+  - &Org5
+    Name: Org5MSP
+    ID: Org5MSP
+    MSPDir: ../crypto-config/peerOrganizations/org5.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org5MSP.admin', 'Org5MSP.peer', 'Org5MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org5MSP.admin', 'Org5MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org5MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org5MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org5.example.com
+        Port: 11051
+
+  - &Org6
+    Name: Org6MSP
+    ID: Org6MSP
+    MSPDir: ../crypto-config/peerOrganizations/org6.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org6MSP.admin', 'Org6MSP.peer', 'Org6MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org6MSP.admin', 'Org6MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org6MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org6MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org6.example.com
+        Port: 12051
+
+  - &Org7
+    Name: Org7MSP
+    ID: Org7MSP
+    MSPDir: ../crypto-config/peerOrganizations/org7.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org7MSP.admin', 'Org7MSP.peer', 'Org7MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org7MSP.admin', 'Org7MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org7MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org7MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org7.example.com
+        Port: 13051
+
+  - &Org8
+    Name: Org8MSP
+    ID: Org8MSP
+    MSPDir: ../crypto-config/peerOrganizations/org8.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org8MSP.admin', 'Org8MSP.peer', 'Org8MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org8MSP.admin', 'Org8MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org8MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org8MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org8.example.com
+        Port: 14051
+
+  - &Org9
+    Name: Org9MSP
+    ID: Org9MSP
+    MSPDir: ../crypto-config/peerOrganizations/org9.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org9MSP.admin', 'Org9MSP.peer', 'Org9MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org9MSP.admin', 'Org9MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org9MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org9MSP.peer')"
+    AnchorPeers:
+      - Host: peer0.org9.example.com
+        Port: 15051
+
+Capabilities:
+
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+Application: &ApplicationDefaults
+  ACLs: &ACLsDefault
+    _lifecycle/CheckCommitReadiness: /Channel/Application/Writers
+
+    _lifecycle/CommitChaincodeDefinition: /Channel/Application/Writers
+
+    _lifecycle/QueryChaincodeDefinition: /Channel/Application/Writers
+
+    _lifecycle/QueryChaincodeDefinitions: /Channel/Application/Writers
+
+    lscc/ChaincodeExists: /Channel/Application/Readers
+
+    lscc/GetDeploymentSpec: /Channel/Application/Readers
+
+    lscc/GetChaincodeData: /Channel/Application/Readers
+
+    lscc/GetInstantiatedChaincodes: /Channel/Application/Readers
+
+    qscc/GetChainInfo: /Channel/Application/Readers
+
+    qscc/GetBlockByNumber: /Channel/Application/Readers
+
+    qscc/GetBlockByHash: /Channel/Application/Readers
+
+    qscc/GetTransactionByID: /Channel/Application/Readers
+
+    qscc/GetBlockByTxID: /Channel/Application/Readers
+
+    cscc/GetConfigBlock: /Channel/Application/Readers
+
+    cscc/GetChannelConfig: /Channel/Application/Readers
+
+    peer/Propose: /Channel/Application/Writers
+
+    peer/ChaincodeToChaincode: /Channel/Application/Writers
+
+    event/Block: /Channel/Application/Readers
+
+    event/FilteredBlock: /Channel/Application/Readers
+  Organizations:
+  Policies:
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ApplicationCapabilities
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  Addresses:
+    - orderer1.example.com:7050
+    - orderer2.example.com:8050
+    - orderer3.example.com:9050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 500
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+
+  EtcdRaft:
+    Consenters:
+      - Host: orderer1.example.com
+        Port: 7050
+        ClientTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
+        ServerTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
+      - Host: orderer2.example.com
+        Port: 8050
+        ClientTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+        ServerTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+      - Host: orderer3.example.com
+        Port: 9050
+        ClientTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+        ServerTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+
+
+    Options:
+      TickInterval: 500ms
+
+      ElectionTick: 10
+
+      HeartbeatTick: 1
+
+      MaxInflightBlocks: 5
+
+      SnapshotIntervalSize: 16 MB
+
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+  Capabilities:
+    <<: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+
+Profiles:
+  # TwoOrgsChannel用来生成channel配置信息，名字可以任意
+  # 需要包含Consortium和Applicatioon两部分。
+  ChannelA:     #  应用通道配置。默认配置的应用通道，添加了两个组织。联盟为SampleConsortium
+    Consortium: SampleConsortium        #  通道所关联的联盟名称
+    <<: *ChannelDefaults
+    Application:        #  指定属于某应用通道的信息，主要包括 属于通道的组织信息
+      <<: *ApplicationDefaults
+      Organizations:          #  初始加入应用通道的组织
+        - *Org1
+        - *Org4
+        - *Org7
+      Policies:
+        Endorsement:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org4MSP.member', 'Org7MSP.member')"
+        Readers:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org4MSP.member', 'Org7MSP.member')"
+        Writers:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org4MSP.member', 'Org7MSP.member')"
+        Admins:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org4MSP.member', 'Org7MSP.member')"
+      Capabilities:
+        <<: *ApplicationCapabilities
+
+  ChannelB: #  应用通道配置。默认配置的应用通道，添加了两个组织。联盟为SampleConsortium
+    Consortium: SampleConsortium        #  通道所关联的联盟名称
+    <<: *ChannelDefaults
+    Application: #  指定属于某应用通道的信息，主要包括 属于通道的组织信息
+      <<: *ApplicationDefaults
+      Organizations: #  初始加入应用通道的组织
+        - *Org1
+        - *Org2
+        - *Org3
+      Policies:
+        Endorsement:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org2MSP.member', 'Org3MSP.member')"
+        Readers:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org2MSP.member', 'Org3MSP.member')"
+        Writers:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org2MSP.member', 'Org3MSP.member')"
+        Admins:
+          Type: Signature
+          Rule: "OR('Org1MSP.member', 'Org2MSP.member', 'Org3MSP.member')"
+      Capabilities:
+        <<: *ApplicationCapabilities
+
+  ChannelC: #  应用通道配置。默认配置的应用通道，添加了两个组织。联盟为SampleConsortium
+    Consortium: SampleConsortium        #  通道所关联的联盟名称
+    <<: *ChannelDefaults
+    Application: #  指定属于某应用通道的信息，主要包括 属于通道的组织信息
+      <<: *ApplicationDefaults
+      Organizations: #  初始加入应用通道的组织
+        - *Org4
+        - *Org5
+        - *Org6
+      Policies:
+        Endorsement:
+          Type: Signature
+          Rule: "OR('Org4MSP.member', 'Org5MSP.member', 'Org6MSP.member')"
+        Readers:
+          Type: Signature
+          Rule: "OR('Org4MSP.member', 'Org5MSP.member', 'Org6MSP.member')"
+        Writers:
+          Type: Signature
+          Rule: "OR('Org4MSP.member', 'Org5MSP.member', 'Org6MSP.member')"
+        Admins:
+          Type: Signature
+          Rule: "OR('Org4MSP.member', 'Org5MSP.member', 'Org6MSP.member')"
+      Capabilities:
+        <<: *ApplicationCapabilities
+
+  ChannelD: #  应用通道配置。默认配置的应用通道，添加了两个组织。联盟为SampleConsortium
+    Consortium: SampleConsortium        #  通道所关联的联盟名称
+    <<: *ChannelDefaults
+    Application: #  指定属于某应用通道的信息，主要包括 属于通道的组织信息
+      <<: *ApplicationDefaults
+      Organizations: #  初始加入应用通道的组织
+        - *Org7
+        - *Org8
+        - *Org9
+      Policies:
+        Endorsement:
+          Type: Signature
+          Rule: "OR('Org7MSP.member', 'Org8MSP.member', 'Org9MSP.member')"
+        Readers:
+          Type: Signature
+          Rule: "OR('Org7MSP.member', 'Org8MSP.member', 'Org9MSP.member')"
+        Writers:
+          Type: Signature
+          Rule: "OR('Org7MSP.member', 'Org8MSP.member', 'Org9MSP.member')"
+        Admins:
+          Type: Signature
+          Rule: "OR('Org7MSP.member', 'Org8MSP.member', 'Org9MSP.member')"
+      Capabilities:
+        <<: *ApplicationCapabilities
+
+  # SampleInsecureKafka定义了一个使用EtcdRaft排序节点的配置
+  SampleMultiNodeEtcdRaft:
+    <<: *ChannelDefaults
+    Capabilities:
+      <<: *ChannelCapabilities
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      EtcdRaft:
+        Consenters:
+          - Host: orderer1.example.com
+            Port: 7050
+            ClientTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
+            ServerTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
+          - Host: orderer2.example.com
+            Port: 8050
+            ClientTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+            ServerTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+          - Host: orderer3.example.com
+            Port: 9050
+            ClientTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+            ServerTLSCert: ../crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+      Addresses:
+        - orderer1.example.com:7050
+        - orderer2.example.com:8050
+        - orderer3.example.com:9050
+
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - <<: *OrdererOrg
+    Consortiums:
+      SampleConsortium:
+        Organizations:
+          - *Org1
+          - *Org2
+          - *Org3
+          - *Org4
+          - *Org5
+          - *Org6
+          - *Org7
+          - *Org8
+          - *Org9

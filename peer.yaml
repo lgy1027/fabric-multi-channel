@@ -1,0 +1,547 @@
+version: '3.7'
+
+services:
+
+  peer0.org1.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    restart: always
+    container_name: peer0.org1.example.com
+    hostname: peer0.org1.example.com
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    networks:
+      - fabric-network
+    ports:
+      - 7051:7051
+      - 7052:7052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true  # whether this node is the org leader, default to false
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org1.example.com
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051 # 唯一
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051  # 可以一样
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org1.example.com:7052  # 唯一
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052 # 跟上面一样
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051 # 唯一
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051  # 可以一样
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org1.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org1.couchdb
+
+
+  peer0.org2.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    restart: always
+    container_name: peer0.org2.example.com
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    hostname: peer0.org2.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 8051:8051
+      - 8052:8052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true  # whether this node is the org leader, default to false
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org2.example.com
+      - CORE_PEER_ADDRESS=peer0.org2.example.com:8051 # 唯一
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051  # 可以一样
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org2.example.com:8052  # 唯一
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052 # 跟上面一样
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:8051 # 唯一
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:8051  # 可以一样
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org2.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org2.couchdb
+
+  peer0.org3.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    restart: always
+    container_name: peer0.org3.example.com
+    hostname: peer0.org3.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 9051:9051
+      - 9052:9052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true  # whether this node is the org leader, default to false
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org3.example.com
+      - CORE_PEER_ADDRESS=peer0.org3.example.com:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org3.example.com:9052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org3.example.com:9051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.example.com:9051
+      - CORE_PEER_LOCALMSPID=Org3MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org3.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org3.couchdb
+
+  peer0.org4.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    restart: always
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    container_name: peer0.org4.example.com
+    hostname: peer0.org4.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 10051:10051
+      - 10052:10052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true  # whether this node is the org leader, default to false
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org4.example.com
+      - CORE_PEER_ADDRESS=peer0.org4.example.com:10051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org4.example.com:10052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org4.example.com:10051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org4.example.com:10051
+      - CORE_PEER_LOCALMSPID=Org4MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org4.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org4.example.com/peers/peer0.org4.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org4.example.com/peers/peer0.org4.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org4.couchdb
+
+  peer0.org5.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    restart: always
+    container_name: peer0.org5.example.com
+    hostname: peer0.org5.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 11051:11051
+      - 11052:11052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true  # whether this node is the org leader, default to false
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org5.example.com
+      - CORE_PEER_ADDRESS=peer0.org5.example.com:11051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:11051
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:11052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org5.example.com:11052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org5.example.com:11051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org5.example.com:11051
+      - CORE_PEER_LOCALMSPID=Org5MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org5.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org5.example.com/peers/peer0.org5.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org5.example.com/peers/peer0.org5.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org5.couchdb
+
+  peer0.org6.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    restart: always
+    container_name: peer0.org6.example.com
+    hostname: peer0.org6.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 12051:12051
+      - 12052:12052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true  # whether this node is the org leader, default to false
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org6.example.com
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:12051
+      - CORE_PEER_ADDRESS=peer0.org6.example.com:12051
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:12052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org6.example.com:12052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org6.example.com:12051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org6.example.com:12051
+      - CORE_PEER_LOCALMSPID=Org6MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org6.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org6.example.com/peers/peer0.org6.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org6.example.com/peers/peer0.org6.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org6.couchdb
+
+  peer0.org7.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    restart: always
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    container_name: peer0.org7.example.com
+    hostname: peer0.org7.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 13051:13051
+      - 13052:13052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true  # whether this node is the org leader, default to false
+      - CORE_METRICS_PROVIDER=prometheus  # prometheus will pull metrics from fabric via /metrics RESTful API
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org7.example.com
+      - CORE_PEER_ADDRESS=peer0.org7.example.com:13051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:13051
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:13052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org7.example.com:13052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org7.example.com:13051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org7.example.com:13051
+      - CORE_PEER_LOCALMSPID=Org7MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org7.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org7.example.com/peers/peer0.org7.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org7.example.com/peers/peer0.org7.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org7.couchdb
+
+  peer0.org8.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    restart: always
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    container_name: peer0.org8.example.com
+    hostname: peer0.org8.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 14051:14051
+      - 14052:14052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true
+      - CORE_METRICS_PROVIDER=prometheus
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org8.example.com
+      - CORE_PEER_ADDRESS=peer0.org8.example.com:14051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:14051
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:14052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org8.example.com:14052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org8.example.com:14051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org8.example.com:14051
+      - CORE_PEER_LOCALMSPID=Org8MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org8.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org8.example.com/peers/peer0.org8.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org8.example.com/peers/peer0.org8.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org8.couchdb
+
+  peer0.org9.example.com:
+    image: hyperledger/fabric-peer:2.5.7
+    restart: always
+    extends:
+      file: base/base.yaml
+      service: fabricdns
+    container_name: peer0.org9.example.com
+    hostname: peer0.org9.example.com
+    networks:
+      - fabric-network
+    ports:
+      - 15051:15051
+      - 15052:15052
+    environment:
+      - FABRIC_LOGGING_SPEC=ERROR
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_FORMAT="%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
+      - CORE_PEER_ADDRESSAUTODETECT=false
+      - CORE_PEER_GOSSIP_ORGLEADER=true
+      - CORE_METRICS_PROVIDER=prometheus
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:2.5.7
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:2.5.7
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:2.5.7
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:2.5.7
+      - CORE_PEER_ID=peer0.org9.example.com
+      - CORE_PEER_ADDRESS=peer0.org9.example.com:15051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:15051
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:15052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org9.example.com:15052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org9.example.com:15051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org9.example.com:15051
+      - CORE_PEER_LOCALMSPID=Org9MSP
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=peer0.org9.couchdb:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./crypto-config/peerOrganizations/org9.example.com/peers/peer0.org9.example.com/msp:/etc/hyperledger/fabric/msp
+      - ./crypto-config/peerOrganizations/org9.example.com/peers/peer0.org9.example.com/tls:/etc/hyperledger/fabric/tls
+    command: peer node start
+    depends_on:
+      - peer0.org9.couchdb
+
+  peer0.org1.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org1.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 5984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org2.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org2.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 6984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org3.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org3.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 7984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org4.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org4.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 8984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org5.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org5.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 9984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org6.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org6.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 10984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org7.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org7.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 11984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org8.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org8.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 12984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+
+  peer0.org9.couchdb:
+    image: couchdb:3.1.1
+    container_name: peer0.org9.couchdb
+    networks:
+      - fabric-network
+    ports:
+      - 13984:5984  # this is the restful API addr, can also access fauxton web ui thru http://localhost:5984/_utils/
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+networks:
+  fabric-network:
+    external: true
