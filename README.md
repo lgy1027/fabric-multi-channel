@@ -67,7 +67,7 @@ docker exec -it fabric-cli bash
 ```
 
 ## 四、接口文档
-[记账服务.md](%BC%C7%D5%CB%B7%FE%CE%F1.md)
+[记账服务.md](https://github.com/lgy1027/fabric-multi-channel/blob/main/%E8%AE%B0%E8%B4%A6%E6%9C%8D%E5%8A%A1.md)
 
 ## 五、贡献指南
 如果您对本项目感兴趣，欢迎参与贡献。以下是一些贡献的方式：
