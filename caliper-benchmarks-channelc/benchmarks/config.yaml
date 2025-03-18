@@ -6,7 +6,7 @@ test:
     number: 5 # 并发线程数
 
   rounds:
-    - label: CreateVehicleStatus
+    - label: Create VehicleStatus
       txNumber: 100 # 总交易数量
       rateControl:
         type: fixed-load
@@ -14,7 +14,7 @@ test:
           transactionLoad: 5 # 每秒发送交易数
       workload:
         module: workload/insurancePolicyWorkload.js # 指向工作负载文件的位置
-    - label: QueryVehicleStatus
+    - label: Query VehicleStatus
       txNumber: 100
       rateControl:
         type: fixed-load
@@ -22,5 +22,25 @@ test:
           transactionLoad: 5
       workload:
         module: workload/queryInsurancePolicy.js
+        arguments:
+          assets: 100
+    - label: Update VehicleStatus
+      txNumber: 100
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+      workload:
+        module: workload/updateinsurancePolicyWorkload.js
+        arguments:
+          assets: 100
+    - label: Delete VehicleStatus
+      txNumber: 100
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+      workload:
+        module: workload/deleteInsurancePolicy.js
         arguments:
           assets: 100

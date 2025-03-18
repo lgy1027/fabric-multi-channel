@@ -11,7 +11,7 @@ test:
     startStrategy: "uniform"
 
   rounds:
-    - label: CreateParkingFacility
+    - label: Create ParkingFacility
       txNumber: 100 # 总交易数量
       rateControl:
         type: fixed-load
@@ -21,7 +21,7 @@ test:
         maxRetries: 3
       workload:
         module: workload/createParkingFacility.js # 指向工作负载文件的位置
-    - label: QueryParkingFacility
+    - label: Query ParkingFacility
       txNumber: 100 # 总交易数量
       rateControl:
         type: fixed-load
@@ -30,5 +30,27 @@ test:
         maxRetries: 3
       workload:
         module: workload/queryParkingFacility.js
+        arguments:
+          assets: 100
+    - label: Update ParkingFacility
+      txNumber: 100 # 总交易数量
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+        maxRetries: 3
+      workload:
+        module: workload/updateParkingFacility.js
+        arguments:
+          assets: 100
+    - label: Delete ParkingFacility
+      txNumber: 100 # 总交易数量
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+        maxRetries: 3
+      workload:
+        module: workload/deleteParkingFacility.js
         arguments:
           assets: 100

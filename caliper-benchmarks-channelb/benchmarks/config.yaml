@@ -24,3 +24,23 @@ test:
         module: workload/queryVehicleStatus.js
         arguments:
           assets: 100
+    - label: Update VehicleStatus
+      txNumber: 100 # 总交易数量
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+      workload:
+        module: workload/updateVehicleStatus.js
+        arguments:
+          assets: 100
+    - label: Delete VehicleStatus
+      txNumber: 100 # 总交易数量
+      rateControl:
+        type: fixed-load
+        opts:
+          transactionLoad: 5
+      workload:
+        module: workload/deleteVehicleStatus.js
+        arguments:
+          assets: 100
