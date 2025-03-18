@@ -1043,6 +1043,10 @@ function down() {
     sleep 2
     rm -rf channel-artifacts/
     rm -rf crypto-config/
+
+  docker compose -f ledger.yaml down -v
+  docker compose -f ipfs/docker-ipfs.yaml down -v
+  docker compose -f caliper.yaml down -v
 }
 
 function ipfs() {
@@ -1053,6 +1057,10 @@ function ipfs() {
 
 function ledger() {
     docker compose -f ledger.yaml up -d
+}
+
+function caliper() {
+    docker compose -f caliper.yaml up -d
 }
 
 # Network operations
@@ -1087,10 +1095,13 @@ case $COMMAND in
     "ledger")
         ledger
         ;;
+    "caliper")
+        caliper
+        ;;
     "down")
         down
         ;;
     *)
-        echo "Useage: create.sh generate | up | create | query-channel | package | install | ipfs | ledger | down"
+        echo "Useage: create.sh generate | up | create | query-channel | package | install | ipfs | ledger | caliper | down"
         exit 1;
 esac
